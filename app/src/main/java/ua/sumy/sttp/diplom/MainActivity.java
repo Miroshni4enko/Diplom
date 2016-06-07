@@ -118,6 +118,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent =new Intent(Intent.ACTION_VIEW,Uri.parse("http://stpp.sumy.ua"));
+            startActivity(intent);
             return true;
         }
 

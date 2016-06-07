@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener,AdapterView.OnItemSelectedListener {
     Button signIn ;
@@ -33,7 +34,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final String FIRST = "firstname";
     Spinner spinner;
     public ListView listView;
-
+    String json;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +49,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //selection.setText(group);
         }
 
-         new RequestTask(this).execute("http://data.stpp.sumy.ua/rozklad/group.php");
+         RequestTask requestTask = new RequestTask(this);
+        try {
+            json = requestTask.execute("http://data.stpp.sumy.ua/rozklad/json_replacement.php").get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         //Установка слушателя для выпадающего списка
         spinner = (Spinner) findViewById(R.id.cities_spinner);
         //listView = (ListView) findViewById(R.id.list);
@@ -59,9 +67,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //Bundle extras = getIntent().getExtras();
         //превращаем в тип стринг для парсинга;
         sharedPreferences = getPreferences(MODE_PRIVATE);
-        String json =  sharedPreferences.getString("json","pustoy");
-        System.out.println("this" + json);
-        Log.e("error",json);
+        //System.out.println("this" + json);
+        //Log.e("error",json + "dddddd"+test);
         spinner.setOnItemSelectedListener(this);
         //передаем в метод парсинга
         JSONURL(json);
