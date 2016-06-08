@@ -12,5 +12,4 @@
     tools:context="ua.sumy.sttp.diplom.MainActivity"
     tools:showIn="@layout/app_bar_main"
     android:id="@+id/container">
-
 </FrameLayout>

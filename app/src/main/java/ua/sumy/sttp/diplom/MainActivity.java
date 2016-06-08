@@ -22,7 +22,7 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import ua.sumy.sttp.diplom.fragments.FragmentGallery;
-import ua.sumy.sttp.diplom.fragments.FragmentImport;
+import ua.sumy.sttp.diplom.fragments.FragmentRozklad;
 import ua.sumy.sttp.diplom.fragments.FragmentSend;
 import ua.sumy.sttp.diplom.fragments.FragmentShare;
 import ua.sumy.sttp.diplom.fragments.FragmentSlideshow;
@@ -30,8 +30,9 @@ import ua.sumy.sttp.diplom.fragments.FragmentTools;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    String login;
-    String group;
+    public static String login;
+    public static String group;
+    public static int subgroup;
     TextView loginView;
     TextView groupView;
     SharedPreferences sharedPreferences;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity
     FragmentShare fShare = null;
     FragmentSlideshow fSlideshow = null;
     FragmentTools fTools = null;
-    FragmentImport fImport = null;
+    FragmentRozklad fImport = null;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -77,10 +78,18 @@ public class MainActivity extends AppCompatActivity
         fShare = new FragmentShare();
         fSlideshow = new FragmentSlideshow();
         fTools = new FragmentTools();
-        fImport = new FragmentImport();
+        fImport = new FragmentRozklad();
 
 
         getSignByIntent();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+
+            fragmentTransaction.replace(R.id.container, fSend);
+        fragmentTransaction.commit();
+
+        DrawerLayout drawerr = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerr.closeDrawer(GravityCompat.START);
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -103,9 +112,8 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         loginView = (TextView) findViewById(R.id.login_sign);
         groupView = (TextView) findViewById(R.id.group_sign);
-
         loginView.setText(login);
-        groupView.setText(group);
+        groupView.setText(group + "  " + subgroup + " підгрупа ");
         return true;
     }
 
@@ -196,6 +204,6 @@ public class MainActivity extends AppCompatActivity
         Intent intent = getIntent();
         login = intent.getStringExtra(LoginActivity.SAVE_LOGIN);
         group = intent.getStringExtra(LoginActivity.SAVE_GROUP);
-
+        subgroup= Integer.valueOf(intent.getStringExtra(LoginActivity.SAVE_SUBGROUP));
     }
 }
