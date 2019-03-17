@@ -21,40 +21,48 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener,AdapterView.OnItemSelectedListener {
-    Button signIn ;
+    Button signIn;
     EditText loginText;
     //EditText groupText;
-     String  login;
-    String group;
-    String subgroup;
+    static String login;
+    static String group;
+    static String subgroup;
     private String selection;
-    SharedPreferences sharedPreferences;
-    final static String  SAVE_LOGIN= "SAVE_LOGIN";
-    final static String  SAVE_GROUP= "SAVE_GROUP";
-    final static String  SAVE_SUBGROUP= "SAVE_SUBGROUP";
+    static SharedPreferences sharedPreferences;
+    final static String SAVE_LOGIN = "SAVE_LOGIN";
+    final static String SAVE_GROUP = "SAVE_GROUP";
+    final static String SAVE_SUBGROUP = "SAVE_SUBGROUP";
     //public static String JsonURL;
-    private static ArrayList<String> myBooks;
+    private static ArrayList<String> listGroup;
     private static final String FIRST = "firstname";
     Spinner spinner;
     public ListView listView;
     String json;
     String jsonParam;
+    RadioButton sub1;
+    RadioButton sub2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSignByPreference();
         signIn = (Button) findViewById(R.id.signIn);
-        loginText = (EditText) findViewById(R.id.login);
+
+        loginText = (EditText)
+
+                findViewById(R.id.login);
+
         View.OnClickListener radioListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                RadioButton rb = (RadioButton)v;
+                RadioButton rb = (RadioButton) v;
                 switch (rb.getId()) {
-                    case R.id.subgroup1:subgroup = "1";
+                    case R.id.subgroup1:
+                        subgroup = "1";
                         break;
-                    case R.id.subgroup2: subgroup = "2";
+                    case R.id.subgroup2:
+                        subgroup = "2";
                         break;
                     default:
                         break;
@@ -63,12 +71,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         };
         //groupText = (EditText) findViewById(R.id.group);
         signIn.setOnClickListener(this);
+        sub1 = (RadioButton)findViewById(R.id.subgroup1);
+        sub1.setOnClickListener(radioListener);
+
+        sub2 = (RadioButton)findViewById(R.id.subgroup2);
+        sub2.setOnClickListener(radioListener);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getSignByPreference();
         if(!login.equals("pustoy")){
             loginText.setText(login);
             //selection.setText(group);
-        }
+        }else if(login.equals("pustoy")){loginText.setText("");};
 
-         RequestTask requestTask = new RequestTask(this);
+        RequestTask requestTask = new RequestTask(this);
         //RequestTaskWithParam requestTask1 = new RequestTaskWithParam(this);
         try {
             json = requestTask.execute("http://data.stpp.sumy.ua/rozklad/group.php").get();
@@ -76,7 +96,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //пароль
             //nameValuePairs.add(new BasicNameValuePair("group", "Е-22"));
             //nameValuePairs.add(new BasicNameValuePair("subgroup", "1"));
-          //  jsonParam = requestTask1.execute("http://data.stpp.sumy.ua/rozklad/json_replacement.php?date=08.06.2016&group=%D5-117&subgroup=1").get();
+            //  jsonParam = requestTask1.execute("http://data.stpp.sumy.ua/rozklad/json_replacement.php?date=08.06.2016&group=%D5-117&subgroup=1").get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -84,15 +104,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         //Установка слушателя для выпадающего списка
         spinner = (Spinner) findViewById(R.id.cities_spinner);
-        RadioButton sub1 = (RadioButton)findViewById(R.id.subgroup1);
-        sub1.setOnClickListener(radioListener);
-
-        RadioButton sub2 = (RadioButton)findViewById(R.id.subgroup2);
-        sub2.setOnClickListener(radioListener);
         //listView = (ListView) findViewById(R.id.list);
         //name = (TextView) findViewById(R.id.name);
         System.out.println("this");
-        myBooks = new ArrayList<String>();
+        listGroup = new ArrayList<String>();
         //принимаем параметр который мы послылали в manActivity
         //Bundle extras = getIntent().getExtras();
         //превращаем в тип стринг для парсинга;
@@ -114,6 +129,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
 
         }
+
     }
 
     @Override
@@ -132,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
     public void saveSign(){
-        sharedPreferences = getPreferences(MODE_PRIVATE);
+        sharedPreferences = getPreferences(MODE_APPEND);
         SharedPreferences.Editor ed = sharedPreferences.edit();
         ed.putString(SAVE_LOGIN, loginText.getText().toString());
         ed.putString(SAVE_GROUP, selection);
@@ -156,33 +172,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         startActivity(intent);
     }
     public void JSONURL(String result) {
-
         try {
-            System.out.println(result);
-            Log.e("error",result);
-            //создали читателя json объектов и отдали ему строку - result
             JSONArray urls = new JSONArray(result);
-            // name.setText(json.getString("name").toString());
-            //дальше находим вход в наш json им является ключевое слово data
-            //проходим циклом по всем нашим параметрам
+            listGroup.add("виберіть групу");
             for (int i = 0; i < urls.length(); i++) {
-                //HashMap<String, Object> hm;
-                //hm = new HashMap<String, Object>();
-                //читаем что в себе хранит параметр firstname
-                //hm.put(FIRST, urls.getJSONObject(i).getString("name").toString());
-                //читаем что в себе хранит параметр lastname
-                myBooks.add(urls.getJSONObject(i).getString("name").toString());
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, myBooks);
-                // Определяем разметку для использования при выборе элемента
+                listGroup.add(urls.getJSONObject(i).getString("name").toString());
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, listGroup);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                // Применяем адаптер к элементу spinner
                 spinner.setAdapter(adapter);
-                //дальше добавляем полученные параметры в наш адаптер
-                /*SimpleAdapter adapter = new SimpleAdapter(this, myBooks, R.layout.activity_login,
-                        new String[] { FIRST}, new int[] {});
-                //выводим в листвбю
-                spinner.setAdapter(adapter);
-               listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);*/
+                spinner.setSelection(0);
             }
         } catch (JSONException e) {
             Log.e("log_tag", "Error parsing data " + e.toString());

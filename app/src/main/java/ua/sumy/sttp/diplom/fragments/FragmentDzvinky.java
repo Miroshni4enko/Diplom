@@ -1,6 +1,5 @@
 package ua.sumy.sttp.diplom.fragments;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,12 +12,12 @@ import ua.sumy.sttp.diplom.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FragmentGallery.OnFragmentInteractionListener} interface
+ * {@link FragmentDzvinky.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FragmentGallery#newInstance} factory method to
+ * Use the {@link FragmentDzvinky#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentGallery extends Fragment {
+public class FragmentDzvinky extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,7 +29,7 @@ public class FragmentGallery extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public FragmentGallery() {
+    public FragmentDzvinky() {
         // Required empty public constructor
     }
 
@@ -40,11 +39,11 @@ public class FragmentGallery extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentGallery.
+     * @return A new instance of fragment FragmentDzvinky.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentGallery newInstance(String param1, String param2) {
-        FragmentGallery fragment = new FragmentGallery();
+    public static FragmentDzvinky newInstance(String param1, String param2) {
+        FragmentDzvinky fragment = new FragmentDzvinky();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,7 +64,7 @@ public class FragmentGallery extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_gallery, container, false);
+        return inflater.inflate(R.layout.fragment_dzvinky, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

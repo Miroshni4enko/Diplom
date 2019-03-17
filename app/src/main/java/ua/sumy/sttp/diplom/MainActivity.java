@@ -21,9 +21,9 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import ua.sumy.sttp.diplom.fragments.FragmentGallery;
+import ua.sumy.sttp.diplom.fragments.FragmentDzvinky;
+import ua.sumy.sttp.diplom.fragments.FragmentMain;
 import ua.sumy.sttp.diplom.fragments.FragmentRozklad;
-import ua.sumy.sttp.diplom.fragments.FragmentSend;
 import ua.sumy.sttp.diplom.fragments.FragmentShare;
 import ua.sumy.sttp.diplom.fragments.FragmentSlideshow;
 import ua.sumy.sttp.diplom.fragments.FragmentTools;
@@ -36,8 +36,8 @@ public class MainActivity extends AppCompatActivity
     TextView loginView;
     TextView groupView;
     SharedPreferences sharedPreferences;
-    FragmentGallery fGallery = null;
-    FragmentSend fSend = null;
+    FragmentDzvinky fGallery = null;
+    FragmentMain fSend = null;
     FragmentShare fShare = null;
     FragmentSlideshow fSlideshow = null;
     FragmentTools fTools = null;
@@ -55,14 +55,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        fGallery = new FragmentGallery();
-        fSend = new FragmentSend();
+        fGallery = new FragmentDzvinky();
+        fSend = new FragmentMain();
         fShare = new FragmentShare();
         fSlideshow = new FragmentSlideshow();
         fTools = new FragmentTools();
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity
         loginView = (TextView) findViewById(R.id.login_sign);
         groupView = (TextView) findViewById(R.id.group_sign);
         loginView.setText(login);
-        groupView.setText(group + "  " + subgroup + " підгрупа ");
+        groupView.setText(group + "\n" + subgroup + " підгрупа ");
         return true;
     }
 
@@ -127,6 +127,20 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent =new Intent(Intent.ACTION_VIEW,Uri.parse("http://stpp.sumy.ua"));
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_exit) {
+            Intent intent =new Intent(this,LoginActivity.class);
+            //LoginActivity.sharedPreferences = getPreferences(MODE_PRIVATE);
+            SharedPreferences.Editor ed = LoginActivity.sharedPreferences.edit();
+            ed.putString(LoginActivity.SAVE_LOGIN, "pustoy");
+            ed.putString(LoginActivity.SAVE_GROUP, "pustoy");
+            ed.putString(LoginActivity.SAVE_SUBGROUP,"pustoy");
+            LoginActivity.group = "pustoy";
+            LoginActivity.subgroup = "pustoy";
+            LoginActivity.login = "pustoy";
+            ed.commit();
             startActivity(intent);
             return true;
         }
